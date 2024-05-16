@@ -46,16 +46,16 @@
                 <input type="text" id="username" name="username"
                        th:value="${schedule.username}" class="form-control" readonly>
             </div>
+            <form th:action="@{/edit/{id}(id=${schedule.id})}" method="get">
+            <div>
+                <label for="pw">pw</label>
+                <input type="text" id="pw" name="pw" class="form-control" placeholder="수정/ 삭제 시 입력">
+            </div>
             <!-- Modal footer -->
             <button class="w-100 btn btn-primary btn-lg"
-                    onclick="location.href='edit.html'"
-                    th:onclick="|location.href='@{/edit/{id}(id=${schedule.id})}'|"
-                    type="button">수정
+                                  type="submit">수정
             </button>
-
-            <button class="w-100 btn btn-primary btn-lg" type="button"
-                    th:onclick="|location.href='@{/delete/{id}(id=${schedule.id})}'|">삭제
-            </button>
+            </form>
 
             <button type="button" class="btn btn-secondary"
                     onclick="location.hredf='list.html'"

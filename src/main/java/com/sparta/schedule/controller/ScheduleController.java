@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sparta.schedule.dto.ScheduleRequestDto;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ScheduleController {
 
+	int a = 0;
 	private final ScheduleService scheduleService;
 	private final ScheduleRepository scheduleRepository;
 
@@ -54,8 +56,14 @@ public class ScheduleController {
 	}
 
 	@GetMapping("/edit/{id}")
-	public String editForm(@PathVariable("id") Long id, Model model) {
-		Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Schedule not found"));
+	public String editForm(@PathVariable("id") Long id, @RequestParam(required = false) String pw
+		, Model model, RedirectAttributes redirectAttributes) {
+		Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(
+			() -> new IllegalArgumentException("Schedule not found"));
+		if(!pw.equals(findSchedule.getPw())) {
+			redirectAttributes.addAttribute("id", id);
+			return "redirect:/list/{id}";
+		}
 		model.addAttribute("schedule", findSchedule);
 		return "/edit";
 	}
