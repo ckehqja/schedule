@@ -6,10 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sparta.schedule.dto.ScheduleRequestDto;
@@ -61,20 +63,15 @@ public class ScheduleController {
 		Schedule findSchedule = scheduleRepository.findById(id)
 			.orElseThrow(NoScheduleException::new);
 		model.addAttribute("schedule", findSchedule);
-		model.addAttribute("a", "aaa");
 		return "/detail";
 	}
 
 	@GetMapping("/edit/{id}")
 	public String editForm(@PathVariable("id") Long id, @RequestParam(required = false) String pw
-		, Model model, RedirectAttributes redirectAttributes) {
+		, Model model) {
 		Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(
 			() -> new IllegalArgumentException("Schedule not found"));
 		if (!pw.equals(findSchedule.getPw())) {
-			model.addAttribute("msg", "findSchedule");
-			redirectAttributes.addAttribute("id", id);
-			redirectAttributes.addFlashAttribute("msg", 100);
-			// return "redirect:/list/{id}";
 			throw new PwMismatchException(id);
 		}
 		model.addAttribute("schedule", findSchedule);
@@ -83,9 +80,10 @@ public class ScheduleController {
 
 	@PostMapping("/edit/{id}")
 	public String edit(@PathVariable Long id, @Valid @ModelAttribute("schedule") ScheduleRequestDto scheduleRequestDto,
-		BindingResult bindingResult) {
+		BindingResult bindingResult, Model model) {
+		// model.addAttribute("schedule", scheduleRepository.findById(id).orElseThrow());
 		if (bindingResult.hasErrors()) {
-			return "edit";
+			return "/edit";
 		}
 		scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Schedule not found"));
 		scheduleService.update(id, scheduleRequestDto);
@@ -96,7 +94,7 @@ public class ScheduleController {
 	@GetMapping("/delete/{id}")
 	@Tag(name = "delete", description = "삭제")
 	public String delete(@PathVariable Long id) {
-		Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(
+		scheduleRepository.findById(id).orElseThrow(
 			NoScheduleException::new);
 		scheduleService.delete(id);
 		return "redirect:/list";
