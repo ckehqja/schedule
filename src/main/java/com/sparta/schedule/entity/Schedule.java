@@ -8,6 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,12 +23,15 @@ public class Schedule extends Timestamped {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	// @Max(200)
+	// @NotBlank
 	@Column(name = "title")
 	private String title;
 	@Column(name = "contents")
 	private String contents;
 	@Column(name = "username")
 	private String username;
+	// @NotBlank
 	@Column(name = "pw")
 	private String pw;
 

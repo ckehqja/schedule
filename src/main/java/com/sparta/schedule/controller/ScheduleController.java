@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,8 @@ import com.sparta.schedule.exception.PwMismatchException;
 import com.sparta.schedule.repository.ScheduleRepository;
 import com.sparta.schedule.service.ScheduleService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -36,8 +39,11 @@ public class ScheduleController {
 	}
 
 	@PostMapping("/add")
-	public String createSchedule(@ModelAttribute("schedule") ScheduleRequestDto scheduleRequestDto,
-		RedirectAttributes redirectAttributes) {
+	public String createSchedule(@Valid @ModelAttribute("schedule") ScheduleRequestDto scheduleRequestDto
+		, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+		if (bindingResult.hasErrors()) {
+			return "/add";
+		}
 		ScheduleResponseDto schedule = scheduleService.createSchedule(scheduleRequestDto);
 		redirectAttributes.addAttribute("id", schedule.getId());
 		return "redirect:/list/{id}";
@@ -76,7 +82,11 @@ public class ScheduleController {
 	}
 
 	@PostMapping("/edit/{id}")
-	public String edit(@PathVariable Long id, @ModelAttribute("schedule") ScheduleRequestDto scheduleRequestDto) {
+	public String edit(@PathVariable Long id, @Valid @ModelAttribute("schedule") ScheduleRequestDto scheduleRequestDto,
+		BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return "edit";
+		}
 		scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Schedule not found"));
 		scheduleService.update(id, scheduleRequestDto);
 
@@ -84,6 +94,7 @@ public class ScheduleController {
 	}
 
 	@GetMapping("/delete/{id}")
+	@Tag(name = "delete", description = "삭제")
 	public String delete(@PathVariable Long id) {
 		Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(
 			NoScheduleException::new);

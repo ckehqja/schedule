@@ -25,6 +25,7 @@
                     <label for="title">제목</label>
                     <input type="text" id="title" name="title"
                            th:field="*{title}" class="form-control" placeholder="이름을 입력하세요">
+                    <div class="field-error text-danger" th:errors="*{title}" />
                 </div>
                 <div>
                     <label for="contents">일정</label>
@@ -39,6 +40,8 @@
                 <div>
                     <label for="pw">비밀번호</label>
                     <input type="text" id="pw" name="pw" th:field="*{pw}" class="form-control" placeholder="이름을 입력하세요">
+                    <div class="field-error text-danger" th:errors="*{pw}" />
+
                 </div>
 
                 <div class="btn-group" role="group" aria-label="버튼 그룹">

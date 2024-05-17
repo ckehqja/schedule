@@ -24,6 +24,7 @@
                     <label for="title">제목</label>
                     <input type="text" id="title" name="title"
                            th:field="*{title}" class="form-control" placeholder="이름을 입력하세요">
+                    <div class="field-error text-danger" th:errors="*{title}" />
                 </div>
                 <div>
                     <label for="contents">일정</label>
