@@ -27,18 +27,18 @@ public class ScheduleController {
 	private final ScheduleService scheduleService;
 	private final ScheduleRepository scheduleRepository;
 
+	@GetMapping("/add")
+	public String addForm(Model model) {
+		model.addAttribute("schedule", new ScheduleRequestDto());
+		return "/add";
+	}
+
 	@PostMapping("/add")
 	public String createSchedule(@ModelAttribute("schedule") ScheduleRequestDto scheduleRequestDto,
 		RedirectAttributes redirectAttributes) {
 		ScheduleResponseDto schedule = scheduleService.createSchedule(scheduleRequestDto);
 		redirectAttributes.addAttribute("id", schedule.getId());
 		return "redirect:/list/{id}";
-	}
-
-	@GetMapping("/add")
-	public String addForm(Model model) {
-		model.addAttribute("schedule", new ScheduleRequestDto());
-		return "/add";
 	}
 
 	@GetMapping("/list")
@@ -75,6 +75,7 @@ public class ScheduleController {
 
 		return "redirect:/list";
 	}
+
 
 	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable Long id) {
