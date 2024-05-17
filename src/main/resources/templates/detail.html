@@ -47,6 +47,9 @@
                        th:value="${schedule.username}" class="form-control" readonly>
             </div>
             <form th:action="@{/edit/{id}(id=${schedule.id})}" method="get">
+
+                <span class="text-danger" th:text="${msg}"></span>
+
                 <div>
                     <label for="pw">pw</label>
                     <input type="text" id="pw" name="pw" class="form-control" placeholder="수정/ 삭제 시 입력">
@@ -58,11 +61,7 @@
                             th:onclick="|location.href='@{/list}'|">Close
                     </button>
                 </div>
-
-
             </form>
-
-
         </div>
     </div>
 </div>

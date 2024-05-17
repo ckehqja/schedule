@@ -14,6 +14,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.sparta.schedule.dto.ScheduleRequestDto;
 import com.sparta.schedule.dto.ScheduleResponseDto;
 import com.sparta.schedule.entity.Schedule;
+import com.sparta.schedule.exception.NoScheduleException;
+import com.sparta.schedule.exception.PwMismatchException;
 import com.sparta.schedule.repository.ScheduleRepository;
 import com.sparta.schedule.service.ScheduleService;
 
@@ -50,8 +52,10 @@ public class ScheduleController {
 
 	@GetMapping("/list/{id}")
 	public String detailForm(@PathVariable("id") Long id, Model model) {
-		Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Schedule not found"));
+		Schedule findSchedule = scheduleRepository.findById(id)
+			.orElseThrow(NoScheduleException::new);
 		model.addAttribute("schedule", findSchedule);
+		model.addAttribute("a", "aaa");
 		return "/detail";
 	}
 
@@ -60,9 +64,12 @@ public class ScheduleController {
 		, Model model, RedirectAttributes redirectAttributes) {
 		Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(
 			() -> new IllegalArgumentException("Schedule not found"));
-		if(!pw.equals(findSchedule.getPw())) {
+		if (!pw.equals(findSchedule.getPw())) {
+			model.addAttribute("msg", "findSchedule");
 			redirectAttributes.addAttribute("id", id);
-			return "redirect:/list/{id}";
+			redirectAttributes.addFlashAttribute("msg", 100);
+			// return "redirect:/list/{id}";
+			throw new PwMismatchException(id);
 		}
 		model.addAttribute("schedule", findSchedule);
 		return "/edit";
@@ -70,16 +77,16 @@ public class ScheduleController {
 
 	@PostMapping("/edit/{id}")
 	public String edit(@PathVariable Long id, @ModelAttribute("schedule") ScheduleRequestDto scheduleRequestDto) {
-		Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Schedule not found"));
+		scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Schedule not found"));
 		scheduleService.update(id, scheduleRequestDto);
 
 		return "redirect:/list";
 	}
 
-
 	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable Long id) {
-		System.out.println("Delete Schedule");
+		Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(
+			NoScheduleException::new);
 		scheduleService.delete(id);
 		return "redirect:/list";
 	}
