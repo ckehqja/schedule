@@ -6,12 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sparta.schedule.dto.ScheduleRequestDto;
@@ -22,24 +20,31 @@ import com.sparta.schedule.exception.PwMismatchException;
 import com.sparta.schedule.repository.ScheduleRepository;
 import com.sparta.schedule.service.ScheduleService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "ScheduleController", description = "ScheduleController")
 @Controller
 @RequiredArgsConstructor
 public class ScheduleController {
 
-	int a = 0;
 	private final ScheduleService scheduleService;
 	private final ScheduleRepository scheduleRepository;
 
+	@Operation(summary = "추가폼으로", description = "추가폼으로 이동")
+	@Parameter(name = "model", description = "뷰에 반환")
 	@GetMapping("/add")
 	public String addForm(Model model) {
 		model.addAttribute("schedule", new ScheduleRequestDto());
 		return "/add";
 	}
 
+	@Operation(summary = "스케쥴 생성", description = "생성")
+	@Parameter(name = "ScheduleRequestDto, bindingResult, redirectAttributes"
+		, description = "dto를 받아서 스케쥴 생성하고, 오류는 bindingResult, redirectAttributes")
 	@PostMapping("/add")
 	public String createSchedule(@Valid @ModelAttribute("schedule") ScheduleRequestDto scheduleRequestDto
 		, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -51,6 +56,8 @@ public class ScheduleController {
 		return "redirect:/list/{id}";
 	}
 
+	@Operation(summary = "목록", description = "목록 이동")
+	@Parameter(name = "model", description = "뷰에 반환")
 	@GetMapping("/list")
 	public String list(Model model) {
 		List<ScheduleResponseDto> schedules = scheduleService.getSchedules();
@@ -58,6 +65,8 @@ public class ScheduleController {
 		return "/list";
 	}
 
+	@Operation(summary = "상세", description = "상세페이지 이동")
+	@Parameter(name = "model, id", description = "id로 스케줄을 찾아 model로 뷰에 반환")
 	@GetMapping("/list/{id}")
 	public String detailForm(@PathVariable("id") Long id, Model model) {
 		Schedule findSchedule = scheduleRepository.findById(id)
@@ -66,9 +75,10 @@ public class ScheduleController {
 		return "/detail";
 	}
 
+	@Operation(summary = "수정폼", description = "수정폼으로 이동")
+	@Parameter(name = "id, pw, model", description = "pw가 일치하면 이동")
 	@GetMapping("/edit/{id}")
-	public String editForm(@PathVariable("id") Long id, @RequestParam(required = false) String pw
-		, Model model) {
+	public String editForm(@PathVariable("id") Long id, @RequestParam(required = false) String pw, Model model) {
 		Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(
 			() -> new IllegalArgumentException("Schedule not found"));
 		if (!pw.equals(findSchedule.getPw())) {
@@ -78,10 +88,11 @@ public class ScheduleController {
 		return "/edit";
 	}
 
+	@Operation(summary = "수정", description = "수정")
+	@Parameter(name = "id, pw, model", description = "pw가 일치하면 이동")
 	@PostMapping("/edit/{id}")
 	public String edit(@PathVariable Long id, @Valid @ModelAttribute("schedule") ScheduleRequestDto scheduleRequestDto,
-		BindingResult bindingResult, Model model) {
-		// model.addAttribute("schedule", scheduleRepository.findById(id).orElseThrow());
+		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return "/edit";
 		}
@@ -91,8 +102,9 @@ public class ScheduleController {
 		return "redirect:/list";
 	}
 
+	@Operation(summary = "삭제", description = "삭제")
+	@Parameter(name = "id", description = "id로 찾아 삭제")
 	@GetMapping("/delete/{id}")
-	@Tag(name = "delete", description = "삭제")
 	public String delete(@PathVariable Long id) {
 		scheduleRepository.findById(id).orElseThrow(
 			NoScheduleException::new);
