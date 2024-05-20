@@ -45,10 +45,9 @@
                        th:value="${schedule.username}" class="form-control" readonly>
             </div>
             <div>
-                첨부파일: <a th:if="${schedule.getAttachUploadFileName()}" th:href="|/attach/${schedule.id}|"
-                         th:text="${schedule.getAttachUploadFileName()}"/><br/>
-                <img th:each="imageFile : ${schedule.getImageUploadFileName()}"
-                     th:src="|/images/${schedule.getImageStoreFileName()}|" width="300" height="300"/>
+                첨부파일: <a th:if="${schedule.getImageUploadFileName()}" th:href="|/attach/${schedule.id}|"
+                         th:text="${schedule.getImageUploadFileName()}"/><br/>
+                <img   th:src="|/images/${schedule.getImageStoreFileName()}|" width="300" height="300"/>
             </div>
             <form th:action="@{/edit/{id}(id=${schedule.id})}" method="get">
 

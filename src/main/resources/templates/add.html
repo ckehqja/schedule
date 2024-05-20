@@ -35,6 +35,8 @@
                     <label for="username">담당자</label>
                     <input type="text" id="username" name="username" th:field="*{username}" class="form-control"
                            placeholder="이름을 입력하세요">
+                    <div class="field-error text-danger" th:errors="*{username}"/>
+
                 </div>
                 <div>
                     <label for="pw">비밀번호</label>
@@ -43,12 +45,8 @@
 
                 </div>
                 <div>
-                    <label for="attachFile">file</label>
-                    <input type="file" id="attachFile" th:field="*{attachFile}" class="form-control"
-                           placeholder="file">
-                    <div class="field-error text-danger" th:text="${imageError}"/>
 
-                    <label for="imageFile">file</label>
+                    <label for="imageFile">imageFile</label>
                     <input type="file" id="imageFile" th:field="*{imageFile}" class="form-control"
                            placeholder="file">
                 </div>

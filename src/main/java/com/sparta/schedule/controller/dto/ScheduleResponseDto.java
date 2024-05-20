@@ -32,7 +32,5 @@ public class ScheduleResponseDto {
 		this.modifiedAt = schedule.getModifiedAt();
 		this.imageUploadFileName = schedule.getImageUploadFileName();
 		this.imageStoreFileName = schedule.getImageStoreFileName();
-		this.attachUploadFileName = schedule.getAttachUploadFileName();
-		this.attachStoreFileName = schedule.getAttachStoreFileName();
 	}
 }

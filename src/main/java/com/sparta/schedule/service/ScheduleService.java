@@ -23,9 +23,8 @@ public class ScheduleService {
 	private final FileStore fileStore;
 
 	public ScheduleResponseDto createSchedule(ScheduleRequestDto request) throws IOException {
-		String[] attach = fileStore.storeFile(request.getAttachFile());
-		String[] Image = fileStore.storeFile(request.getImageFile());
-		Schedule savedSchedule = scheduleRepository.save(new Schedule(request, attach, Image));
+		String[] image = fileStore.storeFile(request.getImageFile());
+		Schedule savedSchedule = scheduleRepository.save(new Schedule(request, image));
 		return new ScheduleResponseDto(savedSchedule);
 	}
 

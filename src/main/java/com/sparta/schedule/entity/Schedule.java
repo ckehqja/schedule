@@ -26,25 +26,19 @@ public class Schedule extends Timestamped {
 	private String pw;
 	private String imageUploadFileName;
 	private String imageStoreFileName;
-	private String attachUploadFileName;
-	private String attachStoreFileName;
 
-	public Schedule(ScheduleRequestDto request, String[] attach, String[] image) {
+	public Schedule(ScheduleRequestDto request, String[] image) {
 		this.title = request.getTitle();
 		this.contents = request.getContents();
 		this.username = request.getUsername();
 		this.pw = request.getPw();
 
-		if (attach != null && attach.length > 0) {
-			this.imageUploadFileName = attach[0];
-			this.imageStoreFileName = attach[1];
-		}
-
 		if (image != null && image.length > 0) {
-			this.attachUploadFileName = image[0];
-			this.attachStoreFileName = image[1];
+			this.imageUploadFileName = image[0];
+			this.imageStoreFileName = image[1];
 		}
 	}
+
 
 	public void update(ScheduleRequestDto request) {
 		this.title = request.getTitle();

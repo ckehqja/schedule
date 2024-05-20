@@ -61,10 +61,7 @@ public class ScheduleController {
 	public String createSchedule(@Valid @ModelAttribute("schedule") ScheduleRequestDto requestDto
 		, BindingResult bindingResult, RedirectAttributes redirectAttributes  ) throws IOException {
 		try {
-			scheduleService.imageFileCheck(requestDto.getAttachFile());
 			scheduleService.imageFileCheck(requestDto.getImageFile());
-
-
 		} catch (IllegalArgumentException e) {
 			log.info(e.getMessage());
 		}
@@ -72,7 +69,7 @@ public class ScheduleController {
 			return "/add";
 		}
 		ScheduleResponseDto schedule = scheduleService.createSchedule(requestDto);
-		redirectAttributes.addFlashAttribute("schedule", schedule);
+		redirectAttributes.addFlashAttribute("schedule", requestDto);
 		redirectAttributes.addAttribute("id", schedule.getId());
 		return "redirect:/list/{id}";
 	}
@@ -145,8 +142,8 @@ public class ScheduleController {
 		throws MalformedURLException {
 		Schedule findSchedule = scheduleService.findSchedule(itemId)
 			.orElseThrow(NoScheduleException::new);
-		String storeFileName = findSchedule.getAttachStoreFileName();
-		String uploadFileName = findSchedule.getAttachUploadFileName();
+		String storeFileName = findSchedule.getImageStoreFileName();
+		String uploadFileName = findSchedule.getImageUploadFileName();
 		UrlResource resource = new UrlResource(
 			"file:" + fileStore.getFullPath(storeFileName));
 
