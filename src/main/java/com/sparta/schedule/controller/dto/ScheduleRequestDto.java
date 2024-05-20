@@ -1,6 +1,7 @@
-package com.sparta.schedule.dto;
+package com.sparta.schedule.controller.dto;
 
-import jakarta.validation.constraints.Max;
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -20,4 +21,6 @@ public class ScheduleRequestDto {
 	private String username;
 	@NotBlank
 	private String pw;
+	private MultipartFile attachFile;
+	private MultipartFile imageFile;
 }

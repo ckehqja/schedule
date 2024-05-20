@@ -1,6 +1,7 @@
-package com.sparta.schedule.dto;
+package com.sparta.schedule.controller.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.sparta.schedule.entity.Schedule;
 
@@ -13,6 +14,10 @@ public class ScheduleResponseDto {
 	private String contents;
 	private String username;
 	private String pw;
+	private String imageUploadFileName;
+	private String imageStoreFileName;
+	private String attachUploadFileName;
+	private String attachStoreFileName;
 
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
@@ -25,5 +30,9 @@ public class ScheduleResponseDto {
 		this.pw = schedule.getPw();
 		this.createdAt = schedule.getCreatedAt();
 		this.modifiedAt = schedule.getModifiedAt();
+		this.imageUploadFileName = schedule.getImageUploadFileName();
+		this.imageStoreFileName = schedule.getImageStoreFileName();
+		this.attachUploadFileName = schedule.getAttachUploadFileName();
+		this.attachStoreFileName = schedule.getAttachStoreFileName();
 	}
 }

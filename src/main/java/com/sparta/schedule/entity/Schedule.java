@@ -1,45 +1,49 @@
 package com.sparta.schedule.entity;
 
-import com.sparta.schedule.dto.ScheduleRequestDto;
+import com.sparta.schedule.controller.dto.ScheduleRequestDto;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "schedule")
+@Table
 @NoArgsConstructor
 public class Schedule extends Timestamped {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// @Max(200)
-	// @NotBlank
-	@Column(name = "title")
 	private String title;
-	@Column(name = "contents")
 	private String contents;
-	@Column(name = "username")
 	private String username;
-	// @NotBlank
-	@Column(name = "pw")
 	private String pw;
+	private String imageUploadFileName;
+	private String imageStoreFileName;
+	private String attachUploadFileName;
+	private String attachStoreFileName;
 
-	public Schedule(ScheduleRequestDto request) {
+	public Schedule(ScheduleRequestDto request, String[] attach, String[] image) {
 		this.title = request.getTitle();
 		this.contents = request.getContents();
 		this.username = request.getUsername();
 		this.pw = request.getPw();
+
+		if (attach != null && attach.length > 0) {
+			this.imageUploadFileName = attach[0];
+			this.imageStoreFileName = attach[1];
+		}
+
+		if (image != null && image.length > 0) {
+			this.attachUploadFileName = image[0];
+			this.attachStoreFileName = image[1];
+		}
 	}
 
 	public void update(ScheduleRequestDto request) {
