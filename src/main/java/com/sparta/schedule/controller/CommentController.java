@@ -2,18 +2,19 @@ package com.sparta.schedule.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sparta.schedule.CommonResponse;
 import com.sparta.schedule.controller.dto.CommentEditRequestDto;
 import com.sparta.schedule.controller.dto.CommentRequestDto;
 import com.sparta.schedule.controller.dto.CommentResponseDto;
-import com.sparta.schedule.repository.CommentRepository;
 import com.sparta.schedule.service.CommentService;
 
 import jakarta.validation.Valid;
@@ -41,9 +42,21 @@ public class CommentController {
 		CommentResponseDto commentResponseDto = commentService.editComment(requestDto);
 		Long commentId = requestDto.getCommentId();
 
-		return  ResponseEntity.ok().body(CommonResponse.<CommentResponseDto>builder()
+		return ResponseEntity.ok().body(CommonResponse.<CommentResponseDto>builder()
 			.statusCode(HttpStatus.OK.value())
 			.message("댓글 수정 완료")
 			.data(commentResponseDto).build());
+	}
+
+	@DeleteMapping("/{commentId}")
+	public ResponseEntity<CommonResponse<String>> deleteComment(
+		@PathVariable Long commentId, @RequestParam int userId) {
+		commentService.deleteComment(commentId, userId);
+		return ResponseEntity.ok().body(CommonResponse.<String>builder()
+			.statusCode(HttpStatus.OK.value())
+			.message("삭제 완료")
+			.data("성공")
+			.build()
+		);
 	}
 }

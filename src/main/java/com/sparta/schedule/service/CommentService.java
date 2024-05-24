@@ -8,7 +8,7 @@ import com.sparta.schedule.controller.dto.CommentRequestDto;
 import com.sparta.schedule.controller.dto.CommentResponseDto;
 import com.sparta.schedule.entity.Comment;
 import com.sparta.schedule.entity.Schedule;
-import com.sparta.schedule.exception.ApiNoMissMathException;
+import com.sparta.schedule.exception.ApiMissMathException;
 import com.sparta.schedule.exception.ApiNoSearchException;
 import com.sparta.schedule.repository.CommentRepository;
 import com.sparta.schedule.repository.ScheduleRepository;
@@ -39,11 +39,20 @@ public class CommentService {
 			.orElseThrow(() -> new ApiNoSearchException("댓글이 없습니다.!!!"));
 
 		if (requestDto.getUserId() != comment.getUserId())
-			throw new ApiNoMissMathException("일정과 유저 아이디가 일치하지 않습니다.");
+			throw new ApiMissMathException("일정과 유저 아이디가 일치하지 않습니다.");
 		if (comment.getSchedule() != schedule)
-			throw new ApiNoMissMathException("일정과 메모가 일치하지 않습니다.!!!");
+			throw new ApiMissMathException("일정과 메모가 일치하지 않습니다.!!!");
 
 		comment.editContents(requestDto);
 		return new CommentResponseDto(comment);
+	}
+
+	public boolean deleteComment(Long commentId, int userId) {
+		Comment comment = commentRepository.findById(commentId).orElseThrow(
+			() -> new ApiNoSearchException("댓글이 없습니다.!!!"));
+		if(comment.getUserId() != userId)
+			throw new ApiMissMathException("일정과 유저 아이디가 일치하지 않습니다.");
+		commentRepository.delete(comment);
+		return true;
 	}
 }

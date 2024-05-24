@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.sparta.schedule.CommonResponse;
-import com.sparta.schedule.exception.ApiNoMissMathException;
+import com.sparta.schedule.exception.ApiMissMathException;
 import com.sparta.schedule.exception.ApiNoSearchException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class ApiExceptionController {
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity handleException(Exception e) {
 		// NestedExceptionUtils.getMostSpecificCause() -> 가장 구체적인 원인, 즉 가장 근본 원인을 찾아서 반환
-		log.error("[Exception] cause: {} , message: {}", NestedExceptionUtils.getMostSpecificCause(e), e.getMessage());
+		log.info("Exception caught in ApiExceptionController : {}", e.getMessage());
 		return ResponseEntity.status(BAD_REQUEST).body(CommonResponse.builder()
 			.statusCode(BAD_REQUEST.value())
 			.data(e.getMessage()).build());
@@ -53,8 +53,8 @@ public class ApiExceptionController {
 			.data(e.getMessage()).build());
 	}
 
-	@ExceptionHandler(ApiNoMissMathException.class)
-	public ResponseEntity<CommonResponse> apiNoMissMathException(ApiNoSearchException e) {
+	@ExceptionHandler(ApiMissMathException.class)
+	public ResponseEntity<CommonResponse> apiNoMissMathException(ApiMissMathException e) {
 		log.info(e.getMessage());
 		return ResponseEntity.status(BAD_REQUEST).body(CommonResponse.builder()
 			.statusCode(BAD_REQUEST.value())
