@@ -1,5 +1,6 @@
 package com.sparta.schedule.entity;
 
+import com.sparta.schedule.controller.dto.CommentEditRequestDto;
 import com.sparta.schedule.controller.dto.CommentRequestDto;
 
 import jakarta.persistence.Entity;
@@ -32,5 +33,9 @@ public class Comment extends Timestamped {
 		this.contents = requestDto.getContents();
 		this.userId = requestDto.getUserId();
 		this.schedule = schedule;
+	}
+
+	public void editContents(CommentEditRequestDto requestDto) {
+		this.contents = requestDto.getContents();
 	}
 }
